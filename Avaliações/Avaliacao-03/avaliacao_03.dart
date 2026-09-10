@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
 
-void main() async {
-  // Define de forma assíncrona o caminho do banco de dados na raiz do projeto
+void main() {
+  // CORREÇÃO: Declarado com 'final' e removido o 'async' desnecessário do main
   final caminhoBanco = p.join(Directory.current.path, 'alunos.db');
   print('Caminho do banco de dados: $caminhoBanco');
 
@@ -38,14 +38,11 @@ void main() async {
 
       if (totalAlunos == 0) {
         print('\nInserindo 3 alunos na tabela...');
-        
-        // Preparando a query assíncrona/segura contra SQL Injection
+        // Preparando a query segura contra SQL Injection
         final stmt = db.prepare('INSERT INTO tb_alunos (nome, idade) VALUES (?, ?)');
-        
         stmt.execute(['Alice Silva', 20]);
         stmt.execute(['Bruno Souza', 22]);
         stmt.execute(['Carla Dias', 19]);
-        
         stmt.dispose(); // Libera a memória do statement
         print('3 alunos incluídos com sucesso!');
       } else {
@@ -71,10 +68,9 @@ void main() async {
     } catch (e) {
       print('Erro ao listar os dados da tabela tb_alunos: $e');
     }
-
   } catch (e) {
     print('Erro crítico ao abrir o banco de dados: $e');
-  } finally {
+    } finally {
     // Garante que a conexão com o arquivo do banco seja encerrada com segurança
     if (db != null) {
       db.dispose();
